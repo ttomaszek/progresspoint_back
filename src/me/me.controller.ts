@@ -71,16 +71,53 @@ export const me = async (req: Request, res: Response) => {
         let totalSets = 0;
         let totalReps = 0;
         let totalVolume = 0;
+        let heaviestWeight = 0;
+
+        // track exercise frequency for favorite exercise
+        const exerciseFrequency = new Map<string, number>();
 
         workouts.forEach(w => {
             w.workoutExercises.forEach(we => {
                 totalSets += we.sets.length;
+                
+                // count exercise frequency
+                exerciseFrequency.set(
+                    we.exerciseId,
+                    (exerciseFrequency.get(we.exerciseId) || 0) + 1
+                );
+
                 we.sets.forEach(s => {
                     totalReps += s.repetitions;
                     totalVolume += s.repetitions * s.weight;
+                    
+                    // track heaviest weight
+                    if (s.weight > heaviestWeight) {
+                        heaviestWeight = s.weight;
+                    }
                 });
             });
         });
+
+        // find favorite exercise (most frequently used)
+        let favoriteExerciseId: string | null = null;
+        let maxFrequency = 0;
+        
+        exerciseFrequency.forEach((count, exerciseId) => {
+            if (count > maxFrequency) {
+                maxFrequency = count;
+                favoriteExerciseId = exerciseId;
+            }
+        });
+
+        // fetch favorite exercise details
+        let favoriteExercise = null;
+        if (favoriteExerciseId) {
+            const exercise = await prisma.exercise.findUnique({
+                where: { id: favoriteExerciseId },
+                select: { id: true, name: true, category: true }
+            });
+            favoriteExercise = exercise;
+        }
 
         return res.json({
             user,
@@ -94,7 +131,9 @@ export const me = async (req: Request, res: Response) => {
             totalExercisesUsed,
             totalSets,
             totalReps,
-            totalVolume
+            totalVolume,
+            heaviestWeight,
+            favoriteExercise
         });
 
     } catch (err) {
