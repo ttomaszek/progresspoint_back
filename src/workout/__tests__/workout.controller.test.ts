@@ -509,4 +509,43 @@ describe("Workout routes", () => {
             expect(res.body.pagination.limit).toBe(10);
         });
     });
+    describe("DELETE /workout", () => {
+        it("should delete a workout", async () => {
+            // Create a workout to delete
+            const workout = await prisma.workout.create({
+                data: {
+                    userId,
+                    startedAt: new Date(),
+                    durationMinutes: 60,
+                    workoutExercises: {
+                        create: [
+                            {
+                                exerciseId: exerciseId1,
+                                order: 1,
+                                sets: {
+                                    create: [
+                                        { setNumber: 1, repetitions: 10, weight: 100 }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            });
+
+            const res = await request(app)
+                .delete("/workout")
+                .set("Authorization", `Bearer ${authToken}`)
+                .send({ workoutId: workout.id });
+
+            expect(res.status).toBe(200);
+            expect(res.body.message).toBe("Workout deleted successfully");
+
+            // Verify workout is deleted
+            const deletedWorkout = await prisma.workout.findUnique({
+                where: { id: workout.id }
+            });
+            expect(deletedWorkout).toBeNull();
+        });
+    })
 })

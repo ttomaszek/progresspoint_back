@@ -157,3 +157,37 @@ export const getWorkout = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const deleteWorkout = async (req: Request, res: Response) => {
+  try {
+    // check if theres a user id
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const userId = req.user;
+    const { workoutId } = req.body;
+
+    if (!workoutId) {
+      return res.status(400).json({ message: "Missing workoutId in request body" });
+    }
+
+    // Verify that the workout exists and belongs to the user
+    const workout = await prisma.workout.findUnique({
+      where: { id: workoutId },
+    });
+
+    if (!workout || workout.userId !== userId) {
+      return res.status(404).json({ message: "Workout not found" });
+    }
+
+    // Delete the workout
+    await prisma.workout.delete({
+      where: { id: workoutId },
+    });
+    return res.status(200).json({ message: "Workout deleted successfully" });
+  } catch (err) {
+    console.error("Failed to delete workout", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
