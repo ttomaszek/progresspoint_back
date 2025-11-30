@@ -18,7 +18,22 @@ async function main() {
     data: [
       { name: 'Bench Press', category: 'Chest' },
       { name: 'Squat', category: 'Legs' },
-      { name: 'Pull Up', category: 'Back' }
+      { name: 'Pull Up', category: 'Back' },
+      { name: 'Deadlift', category: 'Back' },
+      { name: 'Overhead Press', category: 'Shoulders' },
+      { name: 'Bicep Curl', category: 'Arms' },
+      { name: 'Tricep Extension', category: 'Arms' },
+      { name: 'Quad extensions', category: 'Legs' },
+      { name: 'Hamstring Curls', category: 'Legs' },
+      { name: 'Barbell Row', category: 'Back' },
+      { name: 'Lat Pulldown', category: 'Back' },
+      { name: 'Chest Fly', category: 'Chest' },
+      { name : 'Leg Press', category: 'Legs' },
+      { name: 'Calf Raise', category: 'Legs' },
+      { name: 'Dumbbell Shoulder Press', category: 'Shoulders' },
+      { name: 'Lateral Raise', category: 'Shoulders' },
+      { name: 'Hammer Curl', category: 'Arms' },
+      { name: 'Dip', category: 'Arms' }
     ],
     skipDuplicates: true,
   });
