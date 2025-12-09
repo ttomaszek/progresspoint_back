@@ -41,6 +41,14 @@ export const createWorkout = async (req: Request, res: Response) => {
         if (durationMinutes < 0) {
             return res.status(400).json({ message: "Duration must not be negative"})
         }
+        // reps and weight must be non-negative
+        for (const exercise of exercises) {
+            for (const set of exercise.sets) {
+                if (set.repetitions < 0 || set.weight < 0) {
+                    return res.status(400).json({ message: "Repetitions and weight must not be negative"})
+                }
+            }
+        }
         // verify that all exercises exists
         const exerciseIds = exercises.map(e => e.exerciseId);
         const existingExercises = await prisma.exercise.findMany({

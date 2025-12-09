@@ -13,7 +13,7 @@ const app = express();
 // middleware for parsing json bodies
 app.use(express.json());
 
-// use user routes
+// use routers
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
 app.use("/me", meRouter);
@@ -22,7 +22,7 @@ app.use("/workout", workoutRouter);
 
 // cors configuration
 app.use(cors({
-  origin: "http://localhost:6969", // frontend url
+  origin: "http://localhost:5173", // frontend url
   credentials: true
 }));
 
