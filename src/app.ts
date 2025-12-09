@@ -22,7 +22,7 @@ app.use("/workout", workoutRouter);
 
 // cors configuration
 app.use(cors({
-  origin: "http://localhost:5173", // frontend url
+  origin: "https://progresspoint.vercel.app/", // frontend url
   credentials: true
 }));
 
