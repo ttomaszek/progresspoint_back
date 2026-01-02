@@ -16,9 +16,8 @@ ProgressPoint Backend is a TypeScript/Node.js REST API for tracking workouts, ma
 - Prisma 6, PostgreSQL
 - JWT (`jsonwebtoken`), `bcrypt`
 - `multer` + `multer-s3` + AWS SDK v3
-- Day.js for streak/date utilities
-- Jest, ts‑jest, Supertest
-- Docker Compose
+- Jest, Supertest
+- Docker
 
 ## Project Structure
 - App entry: [src/index.ts](src/index.ts)
@@ -165,7 +164,6 @@ Me (`/me`, requires `Authorization`):
 ```bash
 npx prisma generate
 npx prisma db push
-npx prisma migrate dev   # if you maintain migrations
 npm run prisma:seed
 ```
 
@@ -173,13 +171,3 @@ npm run prisma:seed
 - If `AWS_*` vars and `AWS_S3_BUCKET` are set, uploads use S3 via `multer-s3`.
 - Without S3, upload endpoints return a `503` to signal configuration is required.
 - Deleting a profile picture attempts to remove the object from S3 when configured.
-
-## Notes
-- On startup, [src/index.ts](src/index.ts) validates `DATABASE_URL` and `JWT_SECRET`.
-- Docker Compose backend uses `--accept-data-loss` with `prisma db push`. Avoid in production; prefer migrations.
-- Health check: `GET /` → "Server is running".
-- Update CORS origin as needed.
-
----
-
-Maintainers can extend this README with detailed API schemas or OpenAPI docs as the project evolves.
